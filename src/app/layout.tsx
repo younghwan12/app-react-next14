@@ -1,3 +1,5 @@
+import { ThemeProvider } from "@/components/provider/theme-provider";
+import { LayoutProvider } from "@/layout/context/layoutcontext";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
@@ -15,8 +17,18 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={inter.className}>{children}</body>
+    <html lang="ko" suppressHydrationWarning>
+      {/* <Header /> */}
+      <body className={inter.className}>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <LayoutProvider>{children}</LayoutProvider>
+        </ThemeProvider>
+      </body>
     </html>
   );
 }

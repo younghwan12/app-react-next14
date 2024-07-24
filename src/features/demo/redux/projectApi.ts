@@ -1,23 +1,23 @@
 import qs from "query-string";
 import appApi from "@/redux/appApi";
-import { UserListReq, UserListRes } from "../types";
+import { ProjectListRes, ProjectListReq } from "../types";
 import { CommonApiResponse } from "@/common/types";
 
 const appTaggedApi = appApi.enhanceEndpoints({
     addTagTypes: ["user"],
 });
 
-const issuesMgtApi = appTaggedApi.injectEndpoints({
+const projectApi = appTaggedApi.injectEndpoints({
     endpoints: (builder) => ({
-        getUserList: builder.query<CommonApiResponse<UserListRes>, UserListReq>({
+        getProjects: builder.query<CommonApiResponse<ProjectListRes>, ProjectListReq>({
             query: (query) => ({
                 // ?${qs.stringify(query)}
-                url: `/user`,
+                url: `/project/projects`,
                 method: "GET",
             }),
             providesTags: () => [{ type: "user" }],
         }),
-        AddUser: builder.mutation<CommonApiResponse<UserListRes>, UserListReq>({
+        AddUser: builder.mutation<CommonApiResponse<ProjectListRes>, ProjectListReq>({
             query: (query) => ({
                 // ?${qs.stringify(query)}
                 url: `/user`,
@@ -30,5 +30,5 @@ const issuesMgtApi = appTaggedApi.injectEndpoints({
     overrideExisting: true,
 });
 
-export default issuesMgtApi;
-export const { useGetUserListQuery, useLazyGetUserListQuery } = issuesMgtApi;
+export default projectApi;
+export const { useGetProjectsQuery } = projectApi;

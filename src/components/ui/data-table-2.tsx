@@ -28,13 +28,20 @@ import React from "react";
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[];
     data: TData[];
+    rowSelection: Record<string, boolean>;
+    setRowSelection: React.Dispatch<React.SetStateAction<Record<string, boolean>>>;
 }
 
-export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData, TValue>) {
+export function DataTable<TData, TValue>({
+    columns,
+    data,
+    rowSelection,
+    setRowSelection,
+}: DataTableProps<TData, TValue>) {
     const [sorting, setSorting] = React.useState<SortingState>([]);
     const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
     const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
-    const [rowSelection, setRowSelection] = React.useState({});
+    // const [rowSelection, setRowSelection] = React.useState({});
 
     const table = useReactTable({
         data,
@@ -46,8 +53,10 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
         onColumnFiltersChange: setColumnFilters,
         getFilteredRowModel: getFilteredRowModel(),
         onColumnVisibilityChange: setColumnVisibility,
-        onRowSelectionChange: setRowSelection,
-
+        // onRowSelectionChange: setRowSelection,
+        onRowSelectionChange: (updater) => {
+            setRowSelection(updater);
+        },
         state: {
             sorting,
             columnFilters,
@@ -60,9 +69,9 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
         <div>
             <div className="flex items-center py-4">
                 <Input
-                    placeholder="Filter emails..."
-                    value={(table.getColumn("email")?.getFilterValue() as string) ?? ""}
-                    onChange={(event) => table.getColumn("email")?.setFilterValue(event.target.value)}
+                    placeholder="Filter projectNos..."
+                    value={(table.getColumn("projectNo")?.getFilterValue() as string) ?? ""}
+                    onChange={(event) => table.getColumn("projectNo")?.setFilterValue(event.target.value)}
                     className="max-w-sm"
                 />
                 <DropdownMenu>

@@ -2,39 +2,42 @@
 
 import {
     ColumnDef,
-    flexRender,
     ColumnFiltersState,
-    getCoreRowModel,
-    useReactTable,
-    getPaginationRowModel,
-    VisibilityState,
+    RowSelectionState,
     SortingState,
-    getSortedRowModel,
+    Updater,
+    VisibilityState,
+    flexRender,
+    getCoreRowModel,
     getFilteredRowModel,
+    getPaginationRowModel,
+    getSortedRowModel,
+    useReactTable,
 } from "@tanstack/react-table";
 
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Button } from "./button";
-import { Input } from "@/components/ui/input";
 import {
     DropdownMenu,
     DropdownMenuCheckboxItem,
     DropdownMenuContent,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/input";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Button } from "./button";
 
 import React from "react";
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[];
     data: TData[];
+    onSelectionChange: (e: Updater<RowSelectionState>) => void;
 }
 
-export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData, TValue>) {
+export function DataTable<TData, TValue>({ columns, data, onSelectionChange }: DataTableProps<TData, TValue>) {
     const [sorting, setSorting] = React.useState<SortingState>([]);
     const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
     const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
-    const [rowSelection, setRowSelection] = React.useState({});
+    const [rowSelection, setRowSelection] = React.useState<RowSelectionState>({});
 
     const table = useReactTable({
         data,
@@ -46,8 +49,21 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
         onColumnFiltersChange: setColumnFilters,
         getFilteredRowModel: getFilteredRowModel(),
         onColumnVisibilityChange: setColumnVisibility,
-        onRowSelectionChange: setRowSelection,
+        onRowSelectionChange: (updater) => {
+            //
+            setRowSelection((prev) => {
+                if (typeof updater !== "function") {
+                    onSelectionChange(updater);
+                    return updater;
+                }
 
+                const next = updater(prev);
+                onSelectionChange(next);
+                return next;
+            });
+
+            return;
+        },
         state: {
             sorting,
             columnFilters,
@@ -56,13 +72,18 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
         },
     });
 
+    // const rows = table.getSelectedRowModel().rows;
+    // React.useEffect(() => {
+    //     console.log(rows.map(({ original }) => original));
+    // }, [rows.length]);
+
     return (
         <div>
             <div className="flex items-center py-4">
                 <Input
-                    placeholder="Filter emails..."
-                    value={(table.getColumn("email")?.getFilterValue() as string) ?? ""}
-                    onChange={(event) => table.getColumn("email")?.setFilterValue(event.target.value)}
+                    placeholder="Filter projectNos..."
+                    value={(table.getColumn("projectNo")?.getFilterValue() as string) ?? ""}
+                    onChange={(event) => table.getColumn("projectNo")?.setFilterValue(event.target.value)}
                     className="max-w-sm"
                 />
                 <DropdownMenu>

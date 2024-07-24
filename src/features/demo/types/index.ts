@@ -1,10 +1,12 @@
-export type UserListRes = {
+export type ProjectListRes = {
     id: string;
-    name: string;
-    email?: string;
+    projectNo: string;
+    projectName: string;
+    startDt?: string;
+    endDt?: string;
 };
 
-export type UserListReq = {
+export type ProjectListReq = {
     sp_uid?: string;
     del_yn?: string;
     id?: string;

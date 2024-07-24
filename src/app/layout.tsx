@@ -6,6 +6,7 @@ import "./globals.css";
 import { Provider } from "react-redux";
 import { store } from "@/redux/store";
 import StoreProvider from "./StoreProvider";
+import { Toaster } from "@/components/ui/toaster";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -27,6 +28,7 @@ export default function RootLayout({
                 <body className={inter.className}>
                     <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
                         <LayoutProvider>{children}</LayoutProvider>
+                        <Toaster />
                     </ThemeProvider>
                 </body>
             </StoreProvider>

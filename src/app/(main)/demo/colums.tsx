@@ -14,13 +14,15 @@ import {
 import { Checkbox } from "@/components/ui/checkbox";
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
-export type UserListRes = {
+export type ProjectListRes = {
     id: string;
-    name: string;
-    email?: string;
+    projectNo: string;
+    projectName: string;
+    startDt?: string;
+    endDt?: string;
 };
 
-export const columns: ColumnDef<UserListRes>[] = [
+export const columns: ColumnDef<ProjectListRes>[] = [
     {
         id: "select",
         header: ({ table }) => (
@@ -41,24 +43,48 @@ export const columns: ColumnDef<UserListRes>[] = [
         enableHiding: false,
     },
     {
-        accessorKey: "id",
-        header: "ID",
-    },
-    {
-        accessorKey: "email",
-        // header: "Email",
+        accessorKey: "projectNo",
         header: ({ column }) => {
             return (
                 <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
-                    Email
+                    프로젝트No.
                     <ArrowUpDown className="ml-2 h-4 w-4" />
                 </Button>
             );
         },
     },
     {
-        accessorKey: "name",
-        header: "Name",
+        accessorKey: "projectName",
+        header: ({ column }) => {
+            return (
+                <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
+                    프로젝트명
+                    <ArrowUpDown className="ml-2 h-4 w-4" />
+                </Button>
+            );
+        },
+    },
+    {
+        accessorKey: "startDt",
+        header: ({ column }) => {
+            return (
+                <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
+                    시작일시
+                    <ArrowUpDown className="ml-2 h-4 w-4" />
+                </Button>
+            );
+        },
+    },
+    {
+        accessorKey: "endDt",
+        header: ({ column }) => {
+            return (
+                <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
+                    종료일시
+                    <ArrowUpDown className="ml-2 h-4 w-4" />
+                </Button>
+            );
+        },
     },
     {
         id: "Option",

@@ -1,33 +1,28 @@
 "use client";
-import React, { useEffect, useRef, useState } from "react";
-import Link from "next/link";
-import { Spinner } from "@/components/ui/spinner";
-import { ProjectListRes, columns } from "./colums";
 import { Button } from "@/components/ui/button";
-import { usePathname, useSelectedLayoutSegment } from "next/navigation";
-import { useGetProjectsQuery } from "@/features/demo/redux/projectApi";
+import { Calendar } from "@/components/ui/calendar";
 import {
     Dialog,
     DialogContent,
     DialogDescription,
-    DialogFooter,
     DialogHeader,
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog";
+import { Form, FormControl, FormField, FormItem, FormLabel } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { useGetProjectsQuery } from "@/features/demo/redux/projectApi";
+import { cn } from "@/lib/utils";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { format } from "date-fns";
+import { CalendarIcon } from "lucide-react";
+import { usePathname } from "next/navigation";
+import React from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { Checkbox } from "@/components/ui/checkbox";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Calendar } from "@/components/ui/calendar";
-import { CalendarIcon } from "lucide-react";
-import { format } from "date-fns";
-import { cn } from "@/lib/utils";
-import { DataTable } from "@/components/ui/data-table";
+import { columns } from "./colums";
+import { DataTable } from "@/components/ui/data-table-using";
 
 const formSchema = z.object({
     project_no: z.string().min(6).max(50),
@@ -39,11 +34,9 @@ const formSchema = z.object({
 
 const DemoNewPage = () => {
     const { data: rtkData, isLoading, error } = useGetProjectsQuery({ del_yn: "N", page_startnum: 1, page_endnum: 10 });
-    const [rowSelection, setRowSelection] = React.useState({});
     const [date, setDate] = React.useState<Date>();
-
     const [selectedRows, setSelectedRows] = React.useState([]);
-
+    const rows = 10;
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -51,10 +44,6 @@ const DemoNewPage = () => {
             project_name: "",
         },
     });
-
-    // const handleSelectedRowsChange = (rows: ProjectListRes[]) => {
-    //     setSelectedRows(rows);
-    // };
 
     const segment = usePathname();
 
@@ -64,15 +53,8 @@ const DemoNewPage = () => {
         console.log(values);
     }
 
-    const handleSelectionChange = React.useCallback((e: any) => {
-        //
-    }, []);
-
-    if (isLoading) return <Spinner />;
-
     return (
         <div className="container mx-auto py-10">
-            {/* <Button onClick={check}>흠</Button> */}
             <div className="text-right">
                 <Dialog>
                     <DialogTrigger asChild>
@@ -164,18 +146,21 @@ const DemoNewPage = () => {
                     </DialogContent>
                 </Dialog>
             </div>
-            {isLoading ? (
-                <Spinner />
-            ) : rtkData ? (
-                <>
-                    <DataTable columns={columns} data={rtkData.list} onSelectionChange={handleSelectionChange} />
-                    <div>{segment}</div>
-                    <div>
-                        {/* rowSelection 상태를 여기서 사용할 수 있음 */}
-                        <pre>{JSON.stringify(selectedRows, null, 2)}</pre>
-                    </div>
-                </>
-            ) : null}
+            <>
+                {/* {rtkData && ( */}
+                <DataTable
+                    columns={columns}
+                    data={rtkData?.list as any}
+                    loading={isLoading}
+                    onSelectionChange={setSelectedRows}
+                />
+                {/* )} */}
+                <div>{segment}</div>
+                <div>
+                    {/* rowSelection 상태를 여기서 사용할 수 있음 */}
+                    <pre>{JSON.stringify(selectedRows, null, 2)}</pre>
+                </div>
+            </>
         </div>
     );
 };

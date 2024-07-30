@@ -25,6 +25,7 @@ export type ProjectListRes = {
 export const columns: ColumnDef<ProjectListRes>[] = [
     {
         id: "select",
+        size: 50,
         header: ({ table }) => (
             <Checkbox
                 checked={table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && "indeterminate")}

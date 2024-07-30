@@ -1,51 +1,75 @@
 "use client";
 
+import React from "react";
+
 import {
     ColumnDef,
-    flexRender,
     ColumnFiltersState,
-    getCoreRowModel,
-    useReactTable,
-    getPaginationRowModel,
-    VisibilityState,
     SortingState,
-    getSortedRowModel,
+    VisibilityState,
+    flexRender,
+    getCoreRowModel,
     getFilteredRowModel,
+    getPaginationRowModel,
+    getSortedRowModel,
+    useReactTable,
 } from "@tanstack/react-table";
 
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Button } from "./button";
-import { Input } from "@/components/ui/input";
 import {
     DropdownMenu,
     DropdownMenuCheckboxItem,
     DropdownMenuContent,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/input";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Button } from "./button";
+import { Skeleton } from "./skeleton";
 
-import React from "react";
+// rowSelection: Record<string, boolean>;
+// setRowSelection: React.Dispatch<React.SetStateAction<Record<string, boolean>>>;
+// onSelectionChange: () => void;
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[];
     data: TData[];
-    rowSelection: Record<string, boolean>;
-    setRowSelection: React.Dispatch<React.SetStateAction<Record<string, boolean>>>;
+    onSelectionChange: any;
+    loading: boolean;
 }
 
-export function DataTable<TData, TValue>({
-    columns,
-    data,
-    rowSelection,
-    setRowSelection,
-}: DataTableProps<TData, TValue>) {
+export function DataTable<TData, TValue>({ columns, data, loading, onSelectionChange }: DataTableProps<TData, TValue>) {
     const [sorting, setSorting] = React.useState<SortingState>([]);
     const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
     const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
-    // const [rowSelection, setRowSelection] = React.useState({});
+    const [rowSelection, setRowSelection] = React.useState({});
+
+    const tableData = React.useMemo(() => (loading ? Array(30).fill({}) : data), [loading, data]);
+    // const tableColumns = React.useMemo(
+    //     () =>
+    //         loading
+    //             ? columns.map((column) => ({
+    //                   ...column,
+    //                   Cell: () => <Skeleton className="h-[20px] w-full" />,
+    //               }))
+    //             : columns,
+    //     [loading, data]
+    // );
+    const tableColumns = React.useMemo(
+        () =>
+            loading
+                ? columns.map((column) => ({
+                      ...column,
+                      cell: () => <Skeleton className="h-[27px] w-full" />,
+                  }))
+                : columns.map((column) => ({
+                      ...column,
+                  })),
+        [loading, columns]
+    );
 
     const table = useReactTable({
-        data,
-        columns,
+        data: tableData,
+        columns: tableColumns,
         getCoreRowModel: getCoreRowModel(),
         getPaginationRowModel: getPaginationRowModel(),
         onSortingChange: setSorting,
@@ -53,10 +77,7 @@ export function DataTable<TData, TValue>({
         onColumnFiltersChange: setColumnFilters,
         getFilteredRowModel: getFilteredRowModel(),
         onColumnVisibilityChange: setColumnVisibility,
-        // onRowSelectionChange: setRowSelection,
-        onRowSelectionChange: (updater) => {
-            setRowSelection(updater);
-        },
+        onRowSelectionChange: setRowSelection,
         state: {
             sorting,
             columnFilters,
@@ -64,6 +85,14 @@ export function DataTable<TData, TValue>({
             rowSelection,
         },
     });
+
+    const rows = table && table.getSelectedRowModel().rows;
+    React.useEffect(() => {
+        if (rows) {
+            const selRowData = rows.map(({ original }) => original);
+            onSelectionChange(selRowData);
+        }
+    }, [rows.length]);
 
     return (
         <div>

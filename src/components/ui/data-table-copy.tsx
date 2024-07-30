@@ -25,19 +25,15 @@ import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "./button";
 
-import React, { useCallback } from "react";
-import { useAppDispatch } from "@/redux/hooks";
-import { setSelectedRows } from "../redux/tableSlice";
-import { Spinner } from "./spinner";
-import { Skeleton } from "./skeleton";
+import React from "react";
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[];
     data: TData[];
-    loading: boolean;
+    onSelectionChange: (e: Updater<RowSelectionState>) => void;
 }
 
-export function DataTable<TData, TValue>({ columns, data, loading }: DataTableProps<TData, TValue>) {
+export function DataTable<TData, TValue>({ columns, data, onSelectionChange }: DataTableProps<TData, TValue>) {
     const [sorting, setSorting] = React.useState<SortingState>([]);
     const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
     const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
@@ -53,7 +49,21 @@ export function DataTable<TData, TValue>({ columns, data, loading }: DataTablePr
         onColumnFiltersChange: setColumnFilters,
         getFilteredRowModel: getFilteredRowModel(),
         onColumnVisibilityChange: setColumnVisibility,
-        onRowSelectionChange: setRowSelection,
+        onRowSelectionChange: (updater) => {
+            //
+            setRowSelection((prev) => {
+                if (typeof updater !== "function") {
+                    onSelectionChange(updater);
+                    return updater;
+                }
+
+                const next = updater(prev);
+                onSelectionChange(next);
+                return next;
+            });
+
+            return;
+        },
         state: {
             sorting,
             columnFilters,
@@ -63,13 +73,9 @@ export function DataTable<TData, TValue>({ columns, data, loading }: DataTablePr
     });
 
     const rows = table.getSelectedRowModel().rows;
-    // React.useEffect(() => {
-    //     console.log(rows.map(({ original }) => original));
-    // }, [rows.length]);
-
-    // const changeSelectedRows = React.useMemo(() => {
-    //     setSelectedRows(rows.map(({ original }) => original));
-    // }, [rowSelection]);
+    React.useEffect(() => {
+        // console.log(rows.map(({ original }) => original));
+    }, [rows.length]);
 
     return (
         <div>

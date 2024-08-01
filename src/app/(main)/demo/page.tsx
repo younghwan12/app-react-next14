@@ -15,7 +15,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { useGetProjectsQuery } from "@/features/demo/redux/projectApi";
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { format } from "date-fns";
+import { addDays, format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
 import { usePathname } from "next/navigation";
 import React from "react";
@@ -23,18 +23,23 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { columns } from "./colums";
 import { DataTable } from "@/components/ui/data-table-using";
+import { DateRange } from "react-day-picker";
 
 const formSchema = z.object({
     project_no: z.string().min(6).max(50),
     project_name: z.string().min(1).max(50),
     startDte: z.string().min(1),
     endDte: z.string().min(1),
+    rangeDate: z.string().max(20),
     status: z.string().min(1),
 });
 
 const DemoNewPage = () => {
     const { data: rtkData, isLoading, error } = useGetProjectsQuery({ del_yn: "N", page_startnum: 1, page_endnum: 10 });
-    const [date, setDate] = React.useState<Date>();
+    const [date, setDate] = React.useState<DateRange | undefined>({
+        from: new Date(2022, 0, 20),
+        to: addDays(new Date(2022, 0, 20), 20),
+    });
     const [selectedRows, setSelectedRows] = React.useState([]);
     const rows = 10;
     const form = useForm<z.infer<typeof formSchema>>({
@@ -97,6 +102,53 @@ const DemoNewPage = () => {
                                 />
                                 <FormField
                                     control={form.control}
+                                    name="rangeDate"
+                                    render={({ field }) => (
+                                        <FormItem className="grid grid-cols-4 items-center gap-4">
+                                            <FormLabel className="text-right">기간</FormLabel>
+                                            <FormControl>
+                                                <Popover>
+                                                    <PopoverTrigger asChild>
+                                                        <Button
+                                                            id="date"
+                                                            variant={"outline"}
+                                                            className={cn(
+                                                                "w-[300px] justify-start text-left font-normal",
+                                                                !date && "text-muted-foreground"
+                                                            )}
+                                                        >
+                                                            <CalendarIcon className="mr-2 h-4 w-4" />
+                                                            {date?.from ? (
+                                                                date.to ? (
+                                                                    <>
+                                                                        {format(date.from, "LLL dd, y")} -{" "}
+                                                                        {format(date.to, "LLL dd, y")}
+                                                                    </>
+                                                                ) : (
+                                                                    format(date.from, "LLL dd, y")
+                                                                )
+                                                            ) : (
+                                                                <span>Pick a date</span>
+                                                            )}
+                                                        </Button>
+                                                    </PopoverTrigger>
+                                                    <PopoverContent className="w-auto p-0" align="start">
+                                                        <Calendar
+                                                            initialFocus
+                                                            mode="range"
+                                                            defaultMonth={date?.from}
+                                                            selected={date}
+                                                            onSelect={setDate}
+                                                            numberOfMonths={2}
+                                                        />
+                                                    </PopoverContent>
+                                                </Popover>
+                                            </FormControl>
+                                        </FormItem>
+                                    )}
+                                />
+                                {/* <FormField
+                                    control={form.control}
                                     name="startDte"
                                     render={({ field }) => (
                                         <FormItem className="grid grid-cols-4 items-center gap-4">
@@ -139,7 +191,7 @@ const DemoNewPage = () => {
                                             </FormControl>
                                         </FormItem>
                                     )}
-                                />
+                                /> */}
                                 <Button type="submit">Submit</Button>
                             </form>
                         </Form>
@@ -150,7 +202,7 @@ const DemoNewPage = () => {
                 {/* {rtkData && ( */}
                 <DataTable
                     columns={columns}
-                    data={rtkData?.list as any}
+                    data={rtkData?.list}
                     loading={isLoading}
                     onSelectionChange={setSelectedRows}
                 />

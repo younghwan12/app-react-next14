@@ -32,7 +32,7 @@ import { Skeleton } from "./skeleton";
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[];
-    data: TData[];
+    data?: TData[] | undefined;
     onSelectionChange: any;
     loading: boolean;
 }
@@ -43,17 +43,7 @@ export function DataTable<TData, TValue>({ columns, data, loading, onSelectionCh
     const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
     const [rowSelection, setRowSelection] = React.useState({});
 
-    const tableData = React.useMemo(() => (loading ? Array(30).fill({}) : data), [loading, data]);
-    // const tableColumns = React.useMemo(
-    //     () =>
-    //         loading
-    //             ? columns.map((column) => ({
-    //                   ...column,
-    //                   Cell: () => <Skeleton className="h-[20px] w-full" />,
-    //               }))
-    //             : columns,
-    //     [loading, data]
-    // );
+    const tableData = React.useMemo(() => (loading ? Array(30).fill({}) : (data as TData[])), [loading, data]);
     const tableColumns = React.useMemo(
         () =>
             loading
@@ -86,13 +76,14 @@ export function DataTable<TData, TValue>({ columns, data, loading, onSelectionCh
         },
     });
 
-    const rows = table && table.getSelectedRowModel().rows;
+    // if (!rows) return;
     React.useEffect(() => {
+        const rows = table && table.getSelectedRowModel().rows;
         if (rows) {
             const selRowData = rows.map(({ original }) => original);
             onSelectionChange(selRowData);
         }
-    }, [rows.length]);
+    }, [table.getSelectedRowModel().rows]);
 
     return (
         <div>

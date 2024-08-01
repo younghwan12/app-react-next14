@@ -20,7 +20,9 @@ const layout = ({ children }: ChildContainerProps) => {
                 </div>
                 <div className="layout-main-container">
                     <div className="layout-main">
-                        <main className="flex min-h-screen flex-col items-center justify-between p-24">{children}</main>
+                        <main className="flex min-h-screen flex-col items-center justify-between py-20 px-8">
+                            {children}
+                        </main>
                     </div>
                 </div>
                 <AppFooter />

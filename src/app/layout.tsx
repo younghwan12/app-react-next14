@@ -3,9 +3,11 @@ import { LayoutProvider } from "@/layout/context/layoutcontext";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import "@/styles/global.scss";
 import { Provider } from "react-redux";
 import { store } from "@/redux/store";
 import StoreProvider from "./StoreProvider";
+import "@xyflow/react/dist/style.css";
 import { Toaster } from "@/components/ui/toaster";
 
 const inter = Inter({ subsets: ["latin"] });

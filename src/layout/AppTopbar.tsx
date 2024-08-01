@@ -54,6 +54,12 @@ const AppTopbar = forwardRef<AppTopbarRef>((props, ref) => {
             <Link href="/demo" className="ml-5">
                 <span>DEMO</span>
             </Link>
+            <Link href="/reactflow1" className="ml-5">
+                <span>ReactFlow V1</span>
+            </Link>
+            <Link href="/reactflow2" className="ml-5">
+                <span>ReactFlow V2</span>
+            </Link>
 
             <button
                 ref={menubuttonRef}

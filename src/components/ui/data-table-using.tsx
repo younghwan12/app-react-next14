@@ -76,14 +76,26 @@ export function DataTable<TData, TValue>({ columns, data, loading, onSelectionCh
         },
     });
 
-    // if (!rows) return;
+    // React.useEffect(() => {
+    //     const rows = table && table.getSelectedRowModel().rows;
+    //     if (rows) {
+    //         const selRowData = rows.map(({ original }) => original);
+    //         onSelectionChange(selRowData);
+    //     }
+    // }, [table.getSelectedRowModel().rows]);
+
     React.useEffect(() => {
-        const rows = table && table.getSelectedRowModel().rows;
-        if (rows) {
-            const selRowData = rows.map(({ original }) => original);
-            onSelectionChange(selRowData);
+        if (table) {
+            const selectedRowModel = table.getSelectedRowModel();
+            if (selectedRowModel) {
+                const rows = selectedRowModel.rows;
+                if (rows) {
+                    const selRowData = rows.map(({ original }) => original);
+                    onSelectionChange(selRowData);
+                }
+            }
         }
-    }, [table.getSelectedRowModel().rows]);
+    }, [table]);
 
     return (
         <div>

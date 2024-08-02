@@ -51,7 +51,8 @@
     }
     .react-flow__node-input,
     .react-flow__node-default,
-    .react-flow__node-output {
+    .react-flow__node-output,
+    .react-flow__node-any {
         padding: 0;
         width: 40px;
         border-radius: var(--node-border-radius);

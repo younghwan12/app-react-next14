@@ -1,5 +1,4 @@
 import { ThemeProvider } from "@/components/provider/theme-provider";
-import { LayoutProvider } from "@/layout/context/layoutcontext";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
@@ -9,6 +8,7 @@ import { store } from "@/redux/store";
 import StoreProvider from "./StoreProvider";
 import "@xyflow/react/dist/style.css";
 import { Toaster } from "@/components/ui/toaster";
+import { Layout } from "@/layout";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -29,7 +29,7 @@ export default function RootLayout({
             <StoreProvider>
                 <body className={inter.className}>
                     <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-                        <LayoutProvider>{children}</LayoutProvider>
+                        {children}
                         <Toaster />
                     </ThemeProvider>
                 </body>

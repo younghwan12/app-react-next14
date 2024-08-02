@@ -6,7 +6,7 @@ import DnDFlow from "./components/DnDFlow";
 
 export default function ReactFlow1() {
     return (
-        <div className="w-full">
+        <div className="w-full h-full p-5">
             <DnDFlow />
         </div>
     );

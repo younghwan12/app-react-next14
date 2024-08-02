@@ -34,7 +34,7 @@ export default () => {
             id: "1",
             name: "OPEN",
             desc: "설명1",
-            type: "시작",
+            type: "input",
             color: "#ff5f99",
         },
         {
@@ -53,13 +53,13 @@ export default () => {
             id: "4",
             name: "Closed",
             desc: "종료 상태",
-            type: "종료",
+            type: "output",
         },
         {
             id: "5",
             name: "Deffered",
             desc: "연기 처리",
-            type: "종료",
+            type: "output",
         },
     ]);
     const form = useForm<z.infer<typeof formSchema>>({
@@ -99,12 +99,15 @@ export default () => {
                         let color = li.color;
                         let desc = li.desc;
 
-                        if (li.type === "시작") {
+                        if (li.type === "input") {
                             prop = "input";
                             propClass = "dndnode input";
-                        } else if (li.type === "종료") {
+                        } else if (li.type === "output") {
                             prop = "output";
                             propClass = "dndnode output";
+                        } else if (li.type === "any") {
+                            prop = "any";
+                            propClass = "dndnode any";
                         } else {
                             prop = "default";
                             propClass = "dndnode";
@@ -170,9 +173,10 @@ export default () => {
                                                     </SelectTrigger>
                                                 </FormControl>
                                                 <SelectContent>
-                                                    <SelectItem value="시작">시작</SelectItem>
-                                                    <SelectItem value="진행">진행</SelectItem>
-                                                    <SelectItem value="종료">종료</SelectItem>
+                                                    <SelectItem value="input">할 일 상태</SelectItem>
+                                                    <SelectItem value="default">진행 중 상태</SelectItem>
+                                                    <SelectItem value="output">완료 상태</SelectItem>
+                                                    <SelectItem value="any">Any Type</SelectItem>
                                                 </SelectContent>
                                             </Select>
                                         </FormItem>

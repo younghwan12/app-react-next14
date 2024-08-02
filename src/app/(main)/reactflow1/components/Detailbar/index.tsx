@@ -46,11 +46,11 @@ export default function Detailbar({ detail }) {
 
     const edgeForm = useForm<z.infer<typeof edgeFormSchema>>({
         resolver: zodResolver(edgeFormSchema),
-        // defaultValues: {
-        //     name: "",
-        //     desc: "",
-        //     type: "",
-        // },
+        defaultValues: {
+            name: "",
+            desc: "",
+            type: "",
+        },
     });
 
     function onNodeFormSubmit(values: z.infer<typeof nodeFormSchema>) {
@@ -105,6 +105,7 @@ export default function Detailbar({ detail }) {
                                                         <SelectItem value="input">시작</SelectItem>
                                                         <SelectItem value="default">진행</SelectItem>
                                                         <SelectItem value="output">종료</SelectItem>
+                                                        <SelectItem value="any">Any Type</SelectItem>
                                                     </SelectContent>
                                                 </Select>
                                             </FormItem>
@@ -128,65 +129,69 @@ export default function Detailbar({ detail }) {
                                     />
                                 </form>
                             </Form>
+                            <Button>규칙 추가</Button>
                         </>
                     ) : (
-                        <Form {...edgeForm}>
-                            <form onSubmit={edgeForm.handleSubmit(onEdgeFormSubmit)} className="grid gap-4 py-4">
-                                <FormField
-                                    control={edgeForm.control}
-                                    name="name"
-                                    render={({ field }) => (
-                                        <FormItem className="grid grid-cols-4 items-center gap-4">
-                                            <FormLabel className="">Name</FormLabel>
-                                            <FormControl>
-                                                <Input
-                                                    placeholder="상태명을 입력하세요"
-                                                    {...field}
-                                                    className="col-span-3"
-                                                />
-                                            </FormControl>
-                                        </FormItem>
-                                    )}
-                                />
-                                <FormField
-                                    control={edgeForm.control}
-                                    name="type"
-                                    render={({ field }) => (
-                                        <FormItem className="grid grid-cols-4 items-center gap-4">
-                                            <FormLabel className="">Type</FormLabel>
-                                            <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <>
+                            <Form {...edgeForm}>
+                                <form onSubmit={edgeForm.handleSubmit(onEdgeFormSubmit)} className="grid gap-4 py-4">
+                                    <FormField
+                                        control={edgeForm.control}
+                                        name="name"
+                                        render={({ field }) => (
+                                            <FormItem className="grid grid-cols-4 items-center gap-4">
+                                                <FormLabel className="">Name</FormLabel>
                                                 <FormControl>
-                                                    <SelectTrigger className="col-span-3">
-                                                        <SelectValue placeholder="타입을 선택하세요" />
-                                                    </SelectTrigger>
+                                                    <Input
+                                                        placeholder="상태명을 입력하세요"
+                                                        {...field}
+                                                        className="col-span-3"
+                                                    />
                                                 </FormControl>
-                                                <SelectContent>
-                                                    <SelectItem value="시작">시작</SelectItem>
-                                                    <SelectItem value="진행">진행</SelectItem>
-                                                    <SelectItem value="종료">종료</SelectItem>
-                                                </SelectContent>
-                                            </Select>
-                                        </FormItem>
-                                    )}
-                                />
-                                <FormField
-                                    control={edgeForm.control}
-                                    name="desc"
-                                    render={({ field }) => (
-                                        <FormItem className="grid grid-cols-4 items-center gap-4">
-                                            <FormLabel className="">Desc</FormLabel>
-                                            <FormControl>
-                                                <Input
-                                                    placeholder="설명을 입력하세요"
-                                                    {...field}
-                                                    className="col-span-3"
-                                                />
-                                            </FormControl>
-                                        </FormItem>
-                                    )}
-                                />
-                            </form>
-                        </Form>
+                                            </FormItem>
+                                        )}
+                                    />
+                                    <FormField
+                                        control={edgeForm.control}
+                                        name="type"
+                                        render={({ field }) => (
+                                            <FormItem className="grid grid-cols-4 items-center gap-4">
+                                                <FormLabel className="">Type</FormLabel>
+                                                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                                    <FormControl>
+                                                        <SelectTrigger className="col-span-3">
+                                                            <SelectValue placeholder="타입을 선택하세요" />
+                                                        </SelectTrigger>
+                                                    </FormControl>
+                                                    <SelectContent>
+                                                        <SelectItem value="시작">시작</SelectItem>
+                                                        <SelectItem value="진행">진행</SelectItem>
+                                                        <SelectItem value="종료">종료</SelectItem>
+                                                    </SelectContent>
+                                                </Select>
+                                            </FormItem>
+                                        )}
+                                    />
+                                    <FormField
+                                        control={edgeForm.control}
+                                        name="desc"
+                                        render={({ field }) => (
+                                            <FormItem className="grid grid-cols-4 items-center gap-4">
+                                                <FormLabel className="">Desc</FormLabel>
+                                                <FormControl>
+                                                    <Input
+                                                        placeholder="설명을 입력하세요"
+                                                        {...field}
+                                                        className="col-span-3"
+                                                    />
+                                                </FormControl>
+                                            </FormItem>
+                                        )}
+                                    />
+                                </form>
+                            </Form>
+                            {/* <Button>트렌젝션</Button> */}
+                        </>
                     )
                 ) : (
                     <div>너의꿈을 펼쳐봐..</div>

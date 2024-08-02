@@ -32,6 +32,7 @@ import FunctionIcon from "../nodes/FunctionIcon";
 import { Button } from "@/components/ui/button";
 import ContextMenu from "../ContextMenu";
 import Detailbar from "../Detailbar";
+import AnyNode from "../nodes/AnyNode";
 
 const initialNodes: Node<TurboNodeData>[] = [
     // {
@@ -60,6 +61,7 @@ const nodeTypes = {
     input: TurboInputNode,
     default: DefaultNode,
     output: TurboOutputNode,
+    any: AnyNode,
 };
 
 const edgeTypes = {
@@ -153,7 +155,7 @@ const DnDFlow = () => {
     return (
         <>
             <Button onClick={() => console.log({ nodes: nodes, edge: edges })}>데이터 확인</Button>
-            <div className="dndflow" style={{ height: "70vh" }}>
+            <div className="dndflow" style={{ height: "calc(100% - 57px)" }}>
                 <Sidebar />
                 <div className="reactflow-wrapper" ref={reactFlowWrapper}>
                     <ReactFlow

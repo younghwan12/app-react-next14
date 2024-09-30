@@ -48,6 +48,12 @@ export const NavItems: NavItem[] = [
                 color: "text-red-500",
                 href: "/reactflow1",
             },
+            {
+                title: "ReactFlow V2",
+                icon: BookOpenCheck,
+                color: "text-red-500",
+                href: "/treegrid",
+            },
         ],
     },
 ];

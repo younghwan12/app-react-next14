@@ -27,7 +27,7 @@ const formSchema = z.object({
     desc: z.string(),
 });
 
-export default () => {
+const Sidebar = () => {
     const [open, setOpen] = React.useState(false);
     const [leftItem, setLeftItem] = useState([
         {
@@ -218,3 +218,5 @@ export default () => {
         </>
     );
 };
+
+export default Sidebar;

@@ -8,7 +8,7 @@ export type TurboNodeData = {
     type?: string;
 };
 
-export default memo(({ data }: NodeProps<Node<TurboNodeData>>) => {
+const OutputNode = ({ data }: NodeProps<Node<TurboNodeData>>) => {
     return (
         <>
             <div className="wrapper gradient">
@@ -28,4 +28,6 @@ export default memo(({ data }: NodeProps<Node<TurboNodeData>>) => {
             </div>
         </>
     );
-});
+};
+
+export default OutputNode;

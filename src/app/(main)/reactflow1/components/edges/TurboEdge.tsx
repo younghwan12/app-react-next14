@@ -1,7 +1,7 @@
 import React from "react";
 import { EdgeProps, getBezierPath } from "@xyflow/react";
 
-export default function CustomEdge({
+export default function TurboEdge({
     id,
     sourceX,
     sourceY,

@@ -1,14 +1,12 @@
 import { ThemeProvider } from "@/components/provider/theme-provider";
+import { Toaster } from "@/components/ui/toaster";
+import "@/styles/global.scss";
+import "@xyflow/react/dist/style.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import "@/styles/global.scss";
-import { Provider } from "react-redux";
-import { store } from "@/redux/store";
 import StoreProvider from "./StoreProvider";
-import "@xyflow/react/dist/style.css";
-import { Toaster } from "@/components/ui/toaster";
-import { Layout } from "@/layout";
+import Script from "next/script";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -26,6 +24,10 @@ export default function RootLayout({
         // <Provider store={store}>
         <html lang="ko" suppressHydrationWarning>
             {/* <Header /> */}
+            <head>
+                {/* <script src="Grid/GridE.js"></script> */}
+                <Script src="Grid/GridE.js" strategy="beforeInteractive"></Script>
+            </head>
             <StoreProvider>
                 <body className={inter.className}>
                     <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>

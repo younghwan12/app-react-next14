@@ -10,6 +10,14 @@ const DemoNewPage = () => {
         ProductService.getProductsMini().then((data) => setProducts(data as any));
     }, []);
 
+    const [value, setValue] = React.useState<string[]>([]);
+
+    const options = [
+        { label: "React", value: "react" },
+        { label: "Vue", value: "vue" },
+        { label: "Svelte", value: "svelte" },
+    ];
+
     return (
         <div className="flex gap-2">
             <Card>

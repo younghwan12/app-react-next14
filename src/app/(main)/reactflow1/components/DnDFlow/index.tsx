@@ -33,20 +33,48 @@ import { Button } from "@/components/ui/button";
 import ContextMenu from "../ContextMenu";
 import Detailbar from "../Detailbar";
 import AnyNode from "../nodes/AnyNode";
+import CustomEdge from "../edges/CustomEdge";
+
+const data = [
+    {
+        id: 1,
+        position: { x: 50, y: 50 },
+        type: "input",
+        name: "hello",
+        desc: "desc",
+    },
+    {
+        id: 2,
+        position: { x: 250, y: 50 },
+        type: "default",
+        name: "bundle",
+        desc: "good",
+    },
+];
+
+const transformedData: Node<TurboNodeData>[] = data.map((item) => ({
+    id: `r-${item.id}`,
+    position: item.position,
+    type: item.type,
+    data: {
+        name: item.name,
+        desc: item.desc,
+    },
+}));
 
 const initialNodes: Node<TurboNodeData>[] = [
-    // {
-    //     id: "r-1",
-    //     position: { x: 50, y: 50 },
-    //     type: "input",
-    //     data: { icon: <FunctionIcon />, title: "readFile", desc: "api.ts" },
-    // },
-    // {
-    //     id: "r-2",
-    //     position: { x: 250, y: 50 },
-    //     type: "default",
-    //     data: { title: "bundle", desc: "apiContents" },
-    // },
+    {
+        id: "r-1",
+        position: { x: 50, y: 50 },
+        type: "input",
+        data: { name: "readFile", desc: "api.ts" },
+    },
+    {
+        id: "r-2",
+        position: { x: 250, y: 50 },
+        type: "default",
+        data: { name: "bundle", desc: "apiContents" },
+    },
 ];
 
 const initialEdges: Edge[] = [
@@ -54,6 +82,10 @@ const initialEdges: Edge[] = [
         id: "B->G",
         source: "r-1",
         target: "r-2",
+        type: "custom",
+        data: {
+            label: "음",
+        },
     },
 ];
 
@@ -67,6 +99,7 @@ const nodeTypes = {
 const edgeTypes = {
     // floating: FloatingEdge,
     turbo: TurboEdge,
+    custom: CustomEdge,
     // step: StepEdge,
 };
 
@@ -84,7 +117,7 @@ const defaultEdgeOptions = {
 
 const DnDFlow = () => {
     const reactFlowWrapper = useRef(null);
-    const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
+    const [nodes, setNodes, onNodesChange] = useNodesState(transformedData);
     const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
     const [selectedData, setSelectedData] = React.useState(null);
     const { screenToFlowPosition } = useReactFlow();
@@ -120,7 +153,7 @@ const DnDFlow = () => {
                 id: nodeId,
                 type,
                 position,
-                data: { title: nodeName, desc: nodeDesc },
+                data: { name: nodeName, desc: nodeDesc },
             };
 
             setNodes((nds) => nds.concat(newNode));
@@ -189,8 +222,9 @@ const DnDFlow = () => {
     );
 };
 
-export default () => (
+const DnDFlowWrapper = () => (
     <ReactFlowProvider>
         <DnDFlow />
     </ReactFlowProvider>
 );
+export default DnDFlowWrapper;
